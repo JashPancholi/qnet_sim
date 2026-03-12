@@ -28,6 +28,11 @@ body {
   box-sizing: border-box;
 }
 
+.app-wrapper.wide-wrapper {
+  max-width: 1600px; /* Increased from 1500px to allow more breathing room */
+  width: 95%; /* Takes up 95% of the screen width */
+}
+
 .main-content {
   flex-grow: 1; /* Pushes footer down */
   display: flex;
@@ -181,4 +186,41 @@ th { color: #86868b; font-weight: 600; font-size: 0.85rem; text-transform: upper
   color: #86868b;
   font-size: 0.95rem;
   font-weight: 500;
+}
+
+/* --- IOS SEGMENTED CONTROL (MODE TOGGLE) --- */
+.segmented-control {
+  display: flex;
+  padding: 6px;
+  background: #e5e5ea; /* Gray background */
+  border-radius: 14px;
+  margin-bottom: 30px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: none;
+  border: none;
+}
+
+.segment {
+  flex: 1;
+  background: transparent;
+  color: #86868b;
+  font-weight: 600;
+  border-radius: 10px;
+  padding: 10px;
+  border: none;
+  box-shadow: none;
+  transition: all 0.2s ease;
+}
+
+.segment:hover {
+  color: #1d1d1f;
+  background: transparent;
+  transform: none;
+}
+
+.segment.active {
+  background: #ffffff;
+  color: #1d1d1f;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
