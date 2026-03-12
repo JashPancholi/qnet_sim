@@ -1,0 +1,205 @@
+.trusted-network-wrapper {
+  width: 100%; display: flex; flex-direction: column; gap: 30px;
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.network-map-container { 
+  position: relative;
+  text-align: center; 
+  padding: 50px 30px 40px 30px;
+}
+
+.photon-counter {
+  position: absolute; top: -16px; left: 50%; transform: translateX(-50%);
+  background: #f5f5f7; border: 1px solid #d1d1d6; color: #0071e3;
+  padding: 6px 18px; border-radius: 20px; font-size: 0.8rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  z-index: 5;
+}
+
+/* Horizontal Pipeline */
+/* Horizontal Pipeline */
+.network-map {
+  display: flex; 
+  align-items: flex-start; 
+  justify-content: flex-start; /* FIX: Anchors Alice to the left side if the screen is small */
+  flex-wrap: nowrap; 
+  overflow-x: auto; 
+  padding: 20px 0 40px 0;
+  min-height: 380px; 
+}
+
+/* Nodes */
+.network-node {
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  z-index: 2; 
+  min-width: 130px; /* REDUCED from 170px to save space */
+  transition: opacity 0.5s ease;
+}
+
+.node-inactive { opacity: 0.4; filter: grayscale(100%); }
+
+.network-node h3 { margin: 10px 0 0 0; color: #1d1d1f; font-size: 1.1rem; }
+
+.icon-wrapper { padding: 14px; border-radius: 50%; color: white; margin-bottom: 5px; box-shadow: 0 6px 14px rgba(0,0,0,0.15); }
+.blue { background: #0071e3; } .gray { background: #8e8e93; } .purple { background: #af52de; } .red { background: #ff3b30; }
+
+/* Stacked Data Cards */
+.node-stats-container { display: flex; flex-direction: column; gap: 10px; margin-top: 55px; width: 100%; }
+.node-stats { 
+  background: #f5f5f7; border: 1px solid #e5e5ea; padding: 10px 12px; 
+  border-radius: 12px; font-size: 0.85rem; text-align: left; width: 100%; box-sizing: border-box;
+}
+.receive-stats { border-left: 4px solid #af52de; }
+.send-stats { border-left: 4px solid #0071e3; }
+.eve-stats { border-color: #ffcccc; background-color: #fff5f5; margin-top: 55px; }
+
+.stat-label { font-size: 0.7rem; text-transform: uppercase; color: #86868b; font-weight: 700; display: block; margin-bottom: 4px;}
+.node-stats p { margin: 2px 0; color: #1d1d1f; }
+
+/* Links */
+/* Links */
+.network-link {
+  flex-grow: 1; 
+  min-width: 180px; /* REDUCED from 320px to stop Alice from getting pushed off-screen! */
+  position: relative;
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  margin: 0 10px; /* Tighter margins */
+  transition: opacity 0.5s ease;
+}
+
+.link-completed .fiber-optic-cable { border-bottom: 2px solid #34c759; box-shadow: 0 0 10px rgba(52, 199, 89, 0.4); }
+
+.fiber-optic-cable { 
+  position: absolute; width: 100%; height: 1px; 
+  border-bottom: 2px dashed #c7c7cc; 
+  top: 130px; z-index: 1; transition: all 0.5s ease;
+}
+
+.eve-node { position: absolute; top: 0; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; }
+.eve-node h4 { margin: 10px 0 0 0; font-size: 0.95rem;}
+
+/* Photons */
+.photon {
+  position: absolute; left: 0; top: 130px; margin-top: -24px; 
+  font-size: 2.5rem; line-height: 1; font-weight: 400; color: #0071e3; 
+  text-shadow: 0 4px 10px rgba(0, 113, 227, 0.3); z-index: 3;
+}
+
+.photon.direct { animation: travelToBob linear forwards; }
+.photon.intercepted { animation: travelToEveAndBob linear forwards; }
+
+.alice-arrow { display: inline-block; opacity: 1; }
+.eve-arrow { position: absolute; left: 0; top: 0; opacity: 0; }
+
+.photon.intercepted .alice-arrow { animation: fadeAlice linear forwards; animation-duration: inherit; animation-play-state: inherit; }
+.photon.intercepted .eve-arrow { animation: fadeEve linear forwards; animation-duration: inherit; animation-play-state: inherit; }
+
+@keyframes fadeAlice { 0%, 49.9% { opacity: 1; } 50%, 100% { opacity: 0; } }
+@keyframes fadeEve { 0%, 49.9% { opacity: 0; } 50%, 100% { opacity: 1; } }
+
+@keyframes travelToBob {
+  0% { left: 0%; opacity: 0; transform: scale(0.5); }
+  10% { opacity: 1; transform: scale(1); }
+  90% { opacity: 1; transform: scale(1); }
+  100% { left: calc(100% - 30px); opacity: 0; transform: scale(0.5); }
+}
+
+@keyframes travelToEveAndBob {
+  0% { left: 0; opacity: 0; }
+  10% { opacity: 1; color: #0071e3; } 
+  45% { left: 45%; color: #0071e3; opacity: 1; }
+  50% { left: 50%; color: #ff3b30; text-shadow: 0 4px 10px rgba(255, 59, 48, 0.3); transform: scale(1.2); } 
+  55% { left: 55%; color: #ff9f0a; transform: scale(1); } 
+  90% { opacity: 1; }
+  100% { left: calc(100% - 30px); opacity: 0; }
+}
+
+.relay-header { display: flex; align-items: center; gap: 8px; }
+.relay-header h3 { margin: 0; }
+.justify-center { justify-content: center; }
+.text-blue { color: #0071e3 !important; }
+.text-green { color: #34c759 !important; }
+.text-red { color: #ff3b30 !important; }
+.text-gray { color: #8e8e93 !important; font-style: italic; }
+.fade-in { animation: fadeIn 0.6s ease-out forwards; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+
+/* --- ACCORDION LOG STYLING --- */
+.accordion-panel {
+  padding: 0; /* Remove default glass-panel padding so the header hits the edges */
+  overflow: hidden; /* Keeps the border radius neat */
+}
+
+.accordion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 25px;
+  cursor: pointer;
+  background: transparent;
+  transition: background-color 0.2s ease;
+}
+
+.accordion-header:hover {
+  background-color: rgba(0, 113, 227, 0.03); /* Faint blue hover effect */
+}
+
+.accordion-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.accordion-title h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  color: #1d1d1f;
+}
+
+.accordion-summary {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.qber-text {
+  font-weight: 600;
+  color: #86868b;
+  font-size: 0.95rem;
+  width: 100px;
+  text-align: right;
+}
+
+.status-badge {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-secure {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #c8e6c9;
+}
+
+.badge-compromised {
+  background-color: #ffebee;
+  color: #c62828;
+  border: 1px solid #ffcdd2;
+}
+
+.accordion-body {
+  padding: 0 25px 25px 25px;
+  border-top: 1px solid rgba(0,0,0,0.05);
+  margin-top: 5px;
+  padding-top: 20px;
+}
