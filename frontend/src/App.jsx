@@ -14,8 +14,10 @@ function App() {
   const [isPaused, setIsPaused] = useState(false);
 
   const runSimulation = async () => {
-    setLoading(true); setResults(null); 
-    setAnimationComplete(false); setIsPaused(false);
+    setLoading(true);
+    setResults(null); 
+    setAnimationComplete(false);
+    setIsPaused(false);
     
     try {
       const response = await fetch('http://127.0.0.1:5000/api/simulate/bb84', {
@@ -27,8 +29,11 @@ function App() {
       
       if (data.success) {
         const res = data.data;
+        
+        // QUANTUM PHYSICS LOGIC FOR EVE
         if (evePresent) {
-          res.eve_bases = []; res.eve_results = [];
+          res.eve_bases = [];
+          res.eve_results = [];
           for (let i = 0; i < res.alice_bits.length; i++) {
             if (res.alice_bases[i] === res.bob_bases[i] && res.alice_bits[i] !== res.bob_results[i]) {
                res.eve_bases.push(1 - res.alice_bases[i]); 
@@ -54,8 +59,10 @@ function App() {
   };
 
   const stopSimulation = () => {
-    setResults(null); setLoading(false);
-    setAnimationComplete(false); setIsPaused(false);
+    setResults(null); 
+    setLoading(false);
+    setAnimationComplete(false); 
+    setIsPaused(false);
   };
 
   return (
@@ -130,6 +137,9 @@ function App() {
                         <th>#</th>
                         <th>Alice Bit</th>
                         <th>Alice Basis</th>
+                        {/* NEW: Conditionally render Eve Headers */}
+                        {evePresent && <th className="eve-col-header">Eve Basis</th>}
+                        {evePresent && <th className="eve-col-header">Eve Guessed Bit</th>}
                         <th>Bob Basis</th>
                         <th>Bob Result</th>
                         <th>Match Status</th>
@@ -140,7 +150,6 @@ function App() {
                         const basisMatch = results.alice_bases[index] === results.bob_bases[index];
                         const bitMatch = results.alice_bits[index] === results.bob_results[index];
                         
-                        // NEW TABLE LOGIC
                         let rowClass = '';
                         let matchStatus = '';
                         
@@ -155,11 +164,18 @@ function App() {
                           matchStatus = 'Corrupted!';
                         }
 
+                        // Extract Eve's data safely
+                        const eveBasisStr = (evePresent && results.eve_bases) ? (results.eve_bases[index] === 0 ? '+' : 'x') : '-';
+                        const eveBitStr = (evePresent && results.eve_results) ? results.eve_results[index] : '-';
+
                         return (
                           <tr key={index} className={rowClass}>
                             <td>{index + 1}</td>
                             <td>{bit}</td>
                             <td>{results.alice_bases[index] === 0 ? '+' : 'x'}</td>
+                            {/* NEW: Conditionally render Eve Data Cells */}
+                            {evePresent && <td className="eve-col-data">{eveBasisStr}</td>}
+                            {evePresent && <td className="eve-col-data">{eveBitStr}</td>}
                             <td>{results.bob_bases[index] === 0 ? '+' : 'x'}</td>
                             <td>{results.bob_results[index]}</td>
                             <td>{matchStatus}</td>

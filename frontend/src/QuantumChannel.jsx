@@ -70,7 +70,6 @@ const QuantumChannel = ({ results, evePresent, speed, isPaused, onAnimationCompl
           
           {!isFinished && (
             <div className={`photon ${evePresent ? 'intercepted' : 'direct'}`} key={currentIndex} style={animationStyle}>
-               {/* NEW: The arrow splits into two spans to handle the halfway swap! */}
                {evePresent ? (
                  <>
                    <span className="alice-arrow">{getPhotonSymbol(currentAliceBasis, currentAliceBit)}</span>
@@ -100,11 +99,12 @@ const QuantumChannel = ({ results, evePresent, speed, isPaused, onAnimationCompl
         <div className="node bob">
           <div className="icon-wrapper purple"><UserMinus size={32} strokeWidth={2.5} /></div>
           <h3>Bob</h3>
-          {currentIndex > 0 && !isFinished && (
+          {/* UPDATED: Changed from [currentIndex - 1] to [currentIndex] */}
+          {!isFinished && (
              <div className="node-stats">
                <span className="stat-label">Measurement</span>
-               <p>Result: <strong>{results.bob_results[currentIndex - 1]}</strong></p>
-               <p>Basis: <strong>{results.bob_bases[currentIndex - 1] === 0 ? 'Rectilinear (+)' : 'Diagonal (x)'}</strong></p>
+               <p>Result: <strong>{results.bob_results[currentIndex]}</strong></p>
+               <p>Basis: <strong>{results.bob_bases[currentIndex] === 0 ? 'Rectilinear (+)' : 'Diagonal (x)'}</strong></p>
              </div>
           )}
         </div>
