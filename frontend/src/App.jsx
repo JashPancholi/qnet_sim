@@ -31,20 +31,8 @@ function App() {
         });
         const data = await response.json();
         if (data.success) {
-          const res = data.data;
-          if (evePresent) {
-            res.eve_bases = []; res.eve_results = [];
-            for (let i = 0; i < res.alice_bits.length; i++) {
-              if (res.alice_bases[i] === res.bob_bases[i] && res.alice_bits[i] !== res.bob_results[i]) {
-                 res.eve_bases.push(1 - res.alice_bases[i]); res.eve_results.push(Math.random() < 0.5 ? 0 : 1); 
-              } else {
-                 const eveBasis = Math.random() < 0.5 ? 0 : 1;
-                 res.eve_bases.push(eveBasis);
-                 res.eve_results.push(eveBasis === res.alice_bases[i] ? res.alice_bits[i] : (Math.random() < 0.5 ? 0 : 1));
-              }
-            }
-          }
-          setResults(res);
+          // THE FAKE MATH IS GONE! We just pass the real Qiskit data straight to state.
+          setResults(data.data);
         }
       } else {
         const response = await fetch('http://127.0.0.1:5000/api/simulate/network', {
@@ -53,21 +41,8 @@ function App() {
         });
         const data = await response.json();
         if (data.success) {
-          const netRes = data.data;
-          if (compromisedLink >= 0 && netRes.links_status[compromisedLink]) {
-             const linkRes = netRes.links_status[compromisedLink].full_data;
-             linkRes.eve_bases = []; linkRes.eve_results = [];
-             for(let i=0; i < linkRes.alice_bits.length; i++){
-                if(linkRes.alice_bases[i] === linkRes.bob_bases[i] && linkRes.alice_bits[i] !== linkRes.bob_results[i]){
-                   linkRes.eve_bases.push(1 - linkRes.alice_bases[i]); linkRes.eve_results.push(Math.random() < 0.5 ? 0 : 1);
-                } else {
-                   const eBase = Math.random() < 0.5 ? 0 : 1;
-                   linkRes.eve_bases.push(eBase);
-                   linkRes.eve_results.push(eBase === linkRes.alice_bases[i] ? linkRes.alice_bits[i] : (Math.random() < 0.5 ? 0 : 1));
-                }
-             }
-          }
-          setNetworkResults(netRes);
+          // THE FAKE MATH IS GONE! Trusted nodes gets the pure backend payload.
+          setNetworkResults(data.data);
         }
       }
     } catch (error) {
@@ -105,7 +80,6 @@ function App() {
               <input type="number" value={numBits} onChange={(e) => setNumBits(parseInt(e.target.value))} min="20" max="100" />
             </div>
 
-            {/* FIX 1: Removed mode restriction. Speed control is now available globally! */}
             <div className="input-group">
               <label>Simulation Speed</label>
               <select value={speed} onChange={(e) => setSpeed(parseFloat(e.target.value))}>
@@ -192,10 +166,30 @@ function App() {
                       {results.alice_bits.map((bit, index) => {
                         const basisMatch = results.alice_bases[index] === results.bob_bases[index];
                         const bitMatch = results.alice_bits[index] === results.bob_results[index];
-                        let rowClass = ''; let matchStatus = '';
-                        if (!basisMatch) { rowClass = 'row-discarded'; matchStatus = 'Discarded'; } 
-                        else if (bitMatch) { rowClass = 'row-correct'; matchStatus = 'Kept (Valid)'; } 
-                        else { rowClass = 'row-corrupted'; matchStatus = 'Corrupted!'; }
+                        const isSacrificed = results.sacrificed_indices?.includes(index);
+                        
+                        let rowClass = ''; 
+                        let matchStatus = '';
+                        
+                        if (!basisMatch) { 
+                          rowClass = 'row-discarded'; 
+                          matchStatus = 'Discarded (Basis)'; 
+                        } else if (isSacrificed) { 
+                          // NEW: Split the sacrificed rows into valid (yellow) and corrupted (orange)
+                          if (bitMatch) {
+                            rowClass = 'row-sacrificed-valid'; 
+                            matchStatus = 'Sacrificed (Valid)'; 
+                          } else {
+                            rowClass = 'row-sacrificed-corrupted'; 
+                            matchStatus = 'Sacrificed (Corrupted!)'; 
+                          }
+                        } else if (bitMatch) { 
+                          rowClass = 'row-correct'; 
+                          matchStatus = 'Kept (Secret Key)'; 
+                        } else { 
+                          rowClass = 'row-corrupted'; 
+                          matchStatus = 'Corrupted!'; 
+                        }
 
                         const eveBasisStr = (evePresent && results.eve_bases) ? (results.eve_bases[index] === 0 ? '+' : 'x') : '-';
                         const eveBitStr = (evePresent && results.eve_results) ? results.eve_results[index] : '-';
@@ -214,14 +208,52 @@ function App() {
                 </div>
 
                 <div className="final-keys">
-                  <div className="glass-panel key-box">
-                    <h4>Alice's Sifted Key</h4>
-                    <p className="monospace">{results.alice_key.join('')}</p>
-                  </div>
-                  <div className="glass-panel key-box">
-                    <h4>Bob's Sifted Key</h4>
-                    <p className="monospace">{results.bob_key.join('')}</p>
-                  </div>
+                {/* --- THE KEYS --- */}
+                {(() => {
+                  const sortedSacrificed = results.sacrificed_indices ? [...results.sacrificed_indices].sort((a,b) => a - b) : [];
+                  const aliceSacrificed = sortedSacrificed.map(idx => results.alice_bits[idx]).join('');
+                  const bobSacrificed = sortedSacrificed.map(idx => results.bob_results[idx]).join('');
+                  
+                  return (
+                    <div className="keys-container-full">
+                      {/* 1. Sacrificed Keys (Greyed Out, White Background) */}
+                      <div className="final-keys">
+                        <div className="glass-panel key-box-wide" style={{ borderColor: '#e0e0e0' }}>
+                          <h4 style={{ color: '#757575' }}>Alice's Sacrificed Key (Public Test)</h4>
+                          <p className="monospace text-sacrificed">{aliceSacrificed || 'None'}</p>
+                        </div>
+                        <div className="glass-panel key-box-wide" style={{ borderColor: '#e0e0e0' }}>
+                          <h4 style={{ color: '#757575' }}>Bob's Sacrificed Key (Public Test)</h4>
+                          <p className="monospace text-sacrificed">{bobSacrificed || 'None'}</p>
+                        </div>
+                      </div>
+
+                      {/* 2. Final Secret Keys (Dynamic Color, White Background) */}
+                      <div className="final-keys">
+                        <div className="glass-panel key-box-wide" style={{ borderColor: '#cfd8dc' }}>
+                          <h4 style={{ color: '#455a64' }}>Alice's Final Secret Key (Secure)</h4>
+                          <p className="monospace">
+                            {results.alice_key.map((bit, i) => (
+                              <span key={i} className={bit === results.bob_key[i] ? 'bit-match' : 'bit-mismatch'}>
+                                {bit}
+                              </span>
+                            ))}
+                          </p>
+                        </div>
+                        <div className="glass-panel key-box-wide" style={{ borderColor: '#cfd8dc' }}>
+                          <h4 style={{ color: '#455a64' }}>Bob's Final Secret Key (Secure)</h4>
+                          <p className="monospace">
+                            {results.bob_key.map((bit, i) => (
+                              <span key={i} className={bit === results.alice_key[i] ? 'bit-match' : 'bit-mismatch'}>
+                                {bit}
+                              </span>
+                            ))}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })()}
                 </div>
               </div>
             )}
