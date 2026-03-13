@@ -1,0 +1,122 @@
+/* --- PNS LAYOUT FIXES --- */
+
+.pns-layout {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  min-height: 400px;
+  position: relative;
+  padding-top: 20px;
+}
+
+.pns-link-segment {
+  position: relative;
+  flex-grow: 1;
+  height: 80px; /* Matches the height of the Node icons */
+  margin: 0 20px;
+}
+
+/* 1. THE LINE: Centered with Alice and Bob's icons */
+.fiber-optic-cable {
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  border-top: 2px dashed #d1d1d6;
+  top: 40px; /* Vertically centers the line with the icon circles */
+  z-index: 1;
+}
+
+/* 2. THE ARROWS: Traveling EXACTLY on the line */
+.pns-animation-layer {
+  position: absolute;
+  left: 0;
+  top: 40px; /* Matches the cable exactly */
+  width: 100%;
+  z-index: 3;
+}
+
+.photon {
+  position: absolute;
+  margin-top: -18px; /* Centers the arrow symbol vertically on the 2px line */
+  font-size: 2.2rem;
+  color: #0071e3;
+  text-shadow: 0 0 8px rgba(0, 113, 227, 0.2);
+}
+
+/* 3. EVE: Organised and Above Path */
+.pns-eve-anchor {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: -10px; /* Moves the whole Eve block up */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 10;
+}
+
+/* Eve's Icon & Text stay ABOVE the cable line */
+.eve-header-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: white; /* Hides the dashed line behind the header */
+  padding: 0 10px;
+  margin-bottom: 30px; /* Push the line and stats down */
+}
+
+.eve-header-stack h4 {
+  margin: 5px 0 0 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+/* Action badge and memory sit safely below the cable line */
+.pns-action-badge {
+  margin-top: 15px; /* Spacing below the cable line at 40px */
+  background: #f2f2f7;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+}
+
+/* Q-Memory Box Fix: No underlay, clean border */
+.q-memory-box.no-underlay {
+  margin-top: 10px;
+  background: #ffffff;
+  border: 2px dashed #af52de;
+  box-shadow: none; /* Removed the underlay/glow */
+  padding: 10px 15px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #af52de;
+  font-weight: bold;
+  font-size: 0.7rem;
+}
+
+/* Alice and Bob's text cards pushed down so they don't block the line */
+.node-stats-container {
+  margin-top: 60px;
+}
+
+/* --- ANIMATION PHYSICS --- */
+@keyframes pnsTravelToBob {
+  0% { left: 0%; opacity: 0; }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { left: 100%; opacity: 0; }
+}
+
+@keyframes pnsDropIntoMemory {
+  0% { left: 0%; opacity: 0; transform: translateY(0); }
+  15% { opacity: 1; }
+  45% { left: 45%; transform: translateY(0); }
+  55% { left: 50%; transform: translateY(0); color: #af52de; }
+  85% { left: 50%; transform: translateY(110px); opacity: 1; }
+  100% { left: 50%; transform: translateY(110px); opacity: 0; }
+}
+
+.photon.pns-direct { animation: pnsTravelToBob linear forwards; }
+.photon.pns-stolen { animation: pnsDropIntoMemory linear forwards; }
