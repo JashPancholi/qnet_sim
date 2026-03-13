@@ -160,9 +160,14 @@ th, td { padding: 12px 8px; border-bottom: 1px solid #e5e5ea; }
 th { color: #86868b; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; }
 
 /* The 3 Color Codes for the Hackathon */
-.row-discarded { color: #af52de; text-decoration: line-through; background-color: #faf5ff; } /* Purple - Basis Mismatch */
-.row-correct { font-weight: 600; color: #34c759; background-color: #f2fbf4; } /* Green - Successfully Transmitted */
-.row-corrupted { font-weight: 700; color: #ff3b30; background-color: #fff5f5; } /* Red - Eve intercepted and corrupted */
+.row-discarded td {
+  background-color: #e3f2fd; /* Light blue */
+  color: #1565c0;
+  opacity: 0.8;
+  font-weight: bold;
+}
+.row-correct { font-weight: 600; color: #34c759; background-color: #f2fbf4; font-weight: bold;} /* Green - Successfully Transmitted */
+.row-corrupted { font-weight: 700; color: #ff3b30; background-color: #fff5f5; font-weight: bold; } /* Red - Eve intercepted and corrupted */
 
 /* --- FINAL KEYS --- */
 .final-keys { display: flex; gap: 20px; width: 100%; }
@@ -230,4 +235,64 @@ th { color: #86868b; font-weight: 600; font-size: 0.85rem; text-transform: upper
   background-color: #fff8e1; /* Faint yellow/orange */
   color: #b08d00;
   font-style: italic;
+  font-weight: bold;
+}
+
+/* Styling for valid bits sacrificed during Parameter Estimation */
+.row-sacrificed-valid td {
+  background-color: #fff8e1; 
+  color: #b08d00;
+  font-style: italic;
+  font-weight: bold;
+}
+/* Styling for CORRUPTED bits caught during Parameter Estimation */
+.row-sacrificed-corrupted td {
+  background-color: #f3e5f5; /* Light purple */
+  color: #7b1fa2; /* Deep purple */
+  font-style: italic;
+  font-weight: bold;
+}
+
+/* Container to make keys match table width */
+.keys-container-full {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  margin-top: 20px;
+}
+
+/* Individual key boxes */
+.key-box-wide {
+  background: white !important;
+  border: 2px solid;
+  flex: 1;
+  /* Centering Logic */
+  display: flex;
+  flex-direction: column;
+  align-items: center;    /* Centers the H4 and P horizontally */
+  justify-content: center; /* Centers content vertically if the box has height */
+  text-align: center;      /* Ensures the wrapped bits stay centered */
+  padding: 20px;           /* Gives the bits some breathing room */
+}
+
+.key-box-wide p {
+  width: 100%;
+  word-break: break-all;   /* Ensures long keys wrap properly while staying centered */
+  margin: 10px 0 0 0;      /* Standard spacing */
+}
+
+/* Text style for matching/non-matching final bits */
+.bit-match {
+  color: #2e7d32; /* Green */
+  font-weight: bold;
+}
+
+.bit-mismatch {
+  color: #d32f2f; /* Red */
+  font-weight: bold;
+}
+
+.text-sacrificed {
+  color: #9e9e9e; /* Greyed out */
 }

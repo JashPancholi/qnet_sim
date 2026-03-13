@@ -57,8 +57,14 @@ const LinkLogAccordion = ({ link, index, senderName, receiverName, isCompromised
                   rowClass = 'row-discarded';
                   matchStatus = 'Discarded (Basis)';
                 } else if (isSacrificed) {
-                  rowClass = 'row-sacrificed';
-                  matchStatus = 'Sacrificed (QBER)';
+                  // NEW: Split the sacrificed rows into valid (yellow) and corrupted (orange)
+                  if (bitMatch) {
+                    rowClass = 'row-sacrificed-valid';
+                    matchStatus = 'Sacrificed (Valid)';
+                  } else {
+                    rowClass = 'row-sacrificed-corrupted';
+                    matchStatus = 'Sacrificed (Corrupted!)';
+                  }
                 } else if (bitMatch) {
                   rowClass = 'row-correct';
                   matchStatus = 'Kept (Secret Key)';
