@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { User, UserMinus, ShieldAlert, Info } from 'lucide-react';
+import { User, UserMinus, ShieldAlert, Info, ArrowRight, ArrowUp, ArrowUpRight, ArrowUpLeft } from 'lucide-react';
 import './QuantumChannel.css';
 
 const QuantumChannel = ({ results, evePresent, speed, isPaused, onAnimationComplete }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const getPhotonSymbol = (basis, bit) => {
-    if (basis === undefined || bit === undefined) return '';
-    if (basis === 0) return bit === 0 ? '→' : '↑';
-    return bit === 0 ? '↗' : '↖';
+    if (basis === undefined || bit === undefined) return null;
+    const props = { size: 36, strokeWidth: 3 }; // Perfectly uniform thickness!
+    if (basis === 0) return bit === 0 ? <ArrowRight {...props} /> : <ArrowUp {...props} />;
+    return bit === 0 ? <ArrowUpRight {...props} /> : <ArrowUpLeft {...props} />;
   };
 
   useEffect(() => {
@@ -117,13 +118,13 @@ const QuantumChannel = ({ results, evePresent, speed, isPaused, onAnimationCompl
         <div className="legend-grid">
           <div className="legend-col">
             <h5>Rectilinear Basis (+)</h5>
-            <div className="legend-item"><span className="arrow">→</span> Bit 0 (0°)</div>
-            <div className="legend-item"><span className="arrow">↑</span> Bit 1 (90°)</div>
+            <div className="legend-item"><span className="arrow"><ArrowRight size={24} strokeWidth={3}/></span> Bit 0 (0°)</div>
+            <div className="legend-item"><span className="arrow"><ArrowUp size={24} strokeWidth={3}/></span> Bit 1 (90°)</div>
           </div>
           <div className="legend-col">
             <h5>Diagonal Basis (x)</h5>
-            <div className="legend-item"><span className="arrow">↗</span> Bit 0 (45°)</div>
-            <div className="legend-item"><span className="arrow">↖</span> Bit 1 (135°)</div>
+            <div className="legend-item"><span className="arrow"><ArrowUpRight size={24} strokeWidth={3}/></span> Bit 0 (45°)</div>
+            <div className="legend-item"><span className="arrow"><ArrowUpLeft size={24} strokeWidth={3}/></span> Bit 1 (135°)</div>
           </div>
         </div>
       </div>

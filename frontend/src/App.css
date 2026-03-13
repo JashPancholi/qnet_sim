@@ -296,3 +296,14 @@ th { color: #86868b; font-weight: 600; font-size: 0.85rem; text-transform: upper
 .text-sacrificed {
   color: #9e9e9e; /* Greyed out */
 }
+
+.photon-arrow {
+  display: inline-block;
+  font-family: "Courier New", Courier, monospace; /* Monospace forces uniform widths */
+  font-size: 20px; /* Force them to be the exact same size */
+  font-weight: bold;
+  line-height: 1;
+  text-align: center;
+  width: 24px; /* Creates a perfect square bounding box */
+  height: 24px;
+}

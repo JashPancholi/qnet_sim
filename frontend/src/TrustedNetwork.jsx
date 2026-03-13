@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Server, User, UserMinus, ShieldAlert, Lock, Unlock, FileText, ChevronDown, ChevronUp } from 'lucide-react';
+import { Server, User, UserMinus, ShieldAlert, Lock, Unlock, FileText, ChevronDown, ChevronUp, ArrowRight, ArrowUp, ArrowUpRight, ArrowUpLeft } from 'lucide-react';
 import './TrustedNetwork.css';
 
 // --- NEW SUB-COMPONENT: The Expandable Log Box ---
@@ -134,9 +134,10 @@ const TrustedNetwork = ({ results, compromisedLink, speed = 1, isPaused = false 
   const nodes = ['Alice', ...Array.from({ length: results.num_nodes }, (_, i) => `Node ${i + 1}`), 'Bob'];
 
   const getPhotonSymbol = (basis, bit) => {
-    if (basis === undefined || bit === undefined) return '';
-    if (basis === 0) return bit === 0 ? '→' : '↑';
-    return bit === 0 ? '↗' : '↖';
+    if (basis === undefined || bit === undefined) return null;
+    const props = { size: 36, strokeWidth: 3 }; 
+    if (basis === 0) return bit === 0 ? <ArrowRight {...props} /> : <ArrowUp {...props} />;
+    return bit === 0 ? <ArrowUpRight {...props} /> : <ArrowUpLeft {...props} />;
   };
 
   const animationStyle = { 

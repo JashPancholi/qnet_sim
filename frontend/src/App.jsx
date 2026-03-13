@@ -88,6 +88,9 @@ function App() {
                 <option value="1">1x (Normal)</option>
                 <option value="1.5">1.5x</option>
                 <option value="2">2x (Fast)</option>
+                <option value="3">3x (Very Fast)</option>
+                <option value="4">4x (Ultra)</option>
+                <option value="5">5x (Warp Speed)</option>
               </select>
             </div>
 
