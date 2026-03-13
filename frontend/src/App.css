@@ -224,3 +224,10 @@ th { color: #86868b; font-weight: 600; font-size: 0.85rem; text-transform: upper
   color: #1d1d1f;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
+
+/* Styling for bits sacrificed during the Parameter Estimation Phase */
+.row-sacrificed td {
+  background-color: #fff8e1; /* Faint yellow/orange */
+  color: #b08d00;
+  font-style: italic;
+}

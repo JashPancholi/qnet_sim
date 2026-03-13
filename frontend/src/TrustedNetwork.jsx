@@ -47,16 +47,21 @@ const LinkLogAccordion = ({ link, index, senderName, receiverName, isCompromised
               {fd.alice_bits.map((bit, bitIndex) => {
                 const basisMatch = fd.alice_bases[bitIndex] === fd.bob_bases[bitIndex];
                 const bitMatch = fd.alice_bits[bitIndex] === fd.bob_results[bitIndex];
+                // NEW: Check if this exact bit was sacrificed by the backend
+                const isSacrificed = fd.sacrificed_indices?.includes(bitIndex);
                 
                 let rowClass = '';
                 let matchStatus = '';
                 
                 if (!basisMatch) {
                   rowClass = 'row-discarded';
-                  matchStatus = 'Discarded';
+                  matchStatus = 'Discarded (Basis)';
+                } else if (isSacrificed) {
+                  rowClass = 'row-sacrificed';
+                  matchStatus = 'Sacrificed (QBER)';
                 } else if (bitMatch) {
                   rowClass = 'row-correct';
-                  matchStatus = 'Kept (Valid)';
+                  matchStatus = 'Kept (Secret Key)';
                 } else {
                   rowClass = 'row-corrupted';
                   matchStatus = 'Corrupted!';

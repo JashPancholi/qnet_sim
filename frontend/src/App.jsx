@@ -192,10 +192,25 @@ function App() {
                       {results.alice_bits.map((bit, index) => {
                         const basisMatch = results.alice_bases[index] === results.bob_bases[index];
                         const bitMatch = results.alice_bits[index] === results.bob_results[index];
-                        let rowClass = ''; let matchStatus = '';
-                        if (!basisMatch) { rowClass = 'row-discarded'; matchStatus = 'Discarded'; } 
-                        else if (bitMatch) { rowClass = 'row-correct'; matchStatus = 'Kept (Valid)'; } 
-                        else { rowClass = 'row-corrupted'; matchStatus = 'Corrupted!'; }
+                        // NEW: Check if this exact bit was sacrificed by the backend
+                        const isSacrificed = results.sacrificed_indices?.includes(index);
+                        
+                        let rowClass = ''; 
+                        let matchStatus = '';
+                        
+                        if (!basisMatch) { 
+                          rowClass = 'row-discarded'; 
+                          matchStatus = 'Discarded (Basis)'; 
+                        } else if (isSacrificed) { 
+                          rowClass = 'row-sacrificed'; 
+                          matchStatus = 'Sacrificed (QBER)'; 
+                        } else if (bitMatch) { 
+                          rowClass = 'row-correct'; 
+                          matchStatus = 'Kept (Secret Key)'; 
+                        } else { 
+                          rowClass = 'row-corrupted'; 
+                          matchStatus = 'Corrupted!'; 
+                        }
 
                         const eveBasisStr = (evePresent && results.eve_bases) ? (results.eve_bases[index] === 0 ? '+' : 'x') : '-';
                         const eveBitStr = (evePresent && results.eve_results) ? results.eve_results[index] : '-';
