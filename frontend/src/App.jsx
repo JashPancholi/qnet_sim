@@ -249,7 +249,7 @@ function App() {
       </div>
 
       <footer className="app-footer">
-        <p>Made with a lot of Diet Coke and love by Neelay ✕ Jash</p>
+        <p>Securely transmitted by Neelay ✕ Jash.</p>
       </footer>
     </div>
   );
