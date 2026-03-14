@@ -1,12 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 /* --- GLOBAL RESET --- */
-body { 
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   background-color: #f5f5f7; /* Apple's signature light gray */
-  color: #1d1d1f; 
-  margin: 0; 
-  padding: 0; 
+  color: #1d1d1f;
+  margin: 0;
+  padding: 0;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -17,14 +17,14 @@ body {
 }
 
 /* --- MAIN LAYOUT (WITH STICKY FOOTER) --- */
-.app-wrapper { 
+.app-wrapper {
   min-height: 100vh; /* Locks to screen height */
   display: flex;
   flex-direction: column;
-  max-width: 960px; 
+  max-width: 960px;
   width: 100%;
-  margin: 0 auto; 
-  padding: 20px; 
+  margin: 0 auto;
+  padding: 20px;
   box-sizing: border-box;
 }
 
@@ -37,14 +37,31 @@ body {
   flex-grow: 1; /* Pushes footer down */
   display: flex;
   flex-direction: column;
-  align-items: center; 
+  align-items: center;
   width: 100%;
 }
 
 /* --- TYPOGRAPHY --- */
-.app-header { text-align: center; margin-bottom: 30px; margin-top: 20px; width: 100%; }
-.app-header h1 { font-size: 2.5rem; font-weight: 700; letter-spacing: -0.05rem; margin: 0 0 5px; color: #000; }
-.app-header p { font-size: 1.1rem; color: #86868b; margin: 0; }
+.app-header {
+  text-align: center;
+  margin-bottom: 30px;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.app-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -0.05rem;
+  margin: 0 0 5px;
+  color: #000;
+}
+
+.app-header p {
+  font-size: 1.1rem;
+  color: #86868b;
+  margin: 0;
+}
 
 /* --- GLASS PANELS --- */
 .glass-panel {
@@ -60,132 +77,299 @@ body {
 }
 
 /* --- CONTROLS SECTION --- */
-.controls { 
-  max-width: 500px; 
-  margin-bottom: 40px; 
-  display: flex; 
-  flex-direction: column; 
+.controls {
+  max-width: 500px;
+  margin-bottom: 40px;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 20px; 
+  gap: 20px;
 }
 
-.settings-row { display: flex; justify-content: space-between; gap: 20px; width: 100%; }
-.input-group { display: flex; flex-direction: column; flex: 1; }
-.input-group label { font-size: 0.85rem; font-weight: 600; color: #86868b; text-transform: uppercase; margin-bottom: 8px; }
+.settings-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+}
 
-input[type="number"], select { 
-  padding: 12px; 
-  font-size: 1rem; 
+.input-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.input-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #86868b;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+input[type="number"],
+select {
+  padding: 12px;
+  font-size: 1rem;
   font-family: 'Inter', sans-serif;
   background: #f5f5f7;
-  border: 1px solid transparent; 
-  border-radius: 10px; 
+  border: 1px solid transparent;
+  border-radius: 10px;
   outline: none;
   transition: all 0.2s;
   cursor: pointer;
   text-align: center;
 }
 
-input[type="number"]:focus, select:focus { 
-  border-color: #0071e3; 
-  background: #fff; 
-  box-shadow: 0 0 0 4px rgba(0,113,227,0.1); 
+input[type="number"]:focus,
+select:focus {
+  border-color: #0071e3;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1);
 }
 
 /* --- IOS STYLE TOGGLE SWITCH --- */
-.toggle-switch { display: flex; align-items: center; cursor: pointer; gap: 12px; padding: 10px 0; }
-.toggle-switch input { display: none; }
-.slider { width: 44px; height: 24px; background-color: #e5e5ea; border-radius: 24px; position: relative; transition: 0.3s; }
-.slider::before { content: ""; position: absolute; width: 20px; height: 20px; border-radius: 50%; background-color: white; top: 2px; left: 2px; transition: 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-input:checked + .slider { background-color: #34c759; }
-input:checked + .slider::before { transform: translateX(20px); }
-.toggle-label { font-weight: 500; color: #1d1d1f; }
+.toggle-switch {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 12px;
+  padding: 10px 0;
+}
+
+.toggle-switch input {
+  display: none;
+}
+
+.slider {
+  width: 44px;
+  height: 24px;
+  background-color: #e5e5ea;
+  border-radius: 24px;
+  position: relative;
+  transition: 0.3s;
+}
+
+.slider::before {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: white;
+  top: 2px;
+  left: 2px;
+  transition: 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+input:checked + .slider {
+  background-color: #34c759;
+}
+
+input:checked + .slider::before {
+  transform: translateX(20px);
+}
+
+.toggle-label {
+  font-weight: 500;
+  color: #1d1d1f;
+}
 
 /* --- BUTTONS --- */
-.action-buttons { 
-  display: flex; 
-  justify-content: center; 
-  gap: 12px; 
-  width: 100%; 
-  margin-top: 10px; 
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  margin-top: 10px;
 }
 
-button { 
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  padding: 14px 28px; font-size: 1.05rem; font-weight: 600; font-family: 'Inter', sans-serif;
-  border: none; border-radius: 12px; cursor: pointer; transition: all 0.2s; width: 100%;
+button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 28px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
 }
 
-.btn-primary { background-color: #0071e3; color: white; }
-.btn-primary:hover { background-color: #0077ed; transform: scale(1.02); }
+.btn-primary {
+  background-color: #0071e3;
+  color: white;
+}
 
-.btn-secondary { background-color: #e5e5ea; color: #1d1d1f; }
-.btn-secondary:hover { background-color: #d1d1d6; transform: scale(1.02); }
+.btn-primary:hover {
+  background-color: #0077ed;
+  transform: scale(1.02);
+}
 
-.btn-danger { background-color: #ff3b30; color: white; }
-.btn-danger:hover { background-color: #ff453a; transform: scale(1.02); }
+.btn-secondary {
+  background-color: #e5e5ea;
+  color: #1d1d1f;
+}
 
-button:disabled { background-color: #b0bec5; cursor: not-allowed; transform: none; }
+.btn-secondary:hover {
+  background-color: #d1d1d6;
+  transform: scale(1.02);
+}
+
+.btn-danger {
+  background-color: #ff3b30;
+  color: white;
+}
+
+.btn-danger:hover {
+  background-color: #ff453a;
+  transform: scale(1.02);
+}
+
+button:disabled {
+  background-color: #b0bec5;
+  cursor: not-allowed;
+  transform: none;
+}
 
 /* --- RESULTS SECTION --- */
-.results-wrapper { width: 100%; display: flex; flex-direction: column; align-items: center; }
-
-.results-data-fade-in { 
-  animation: fadeIn 0.5s ease-out forwards; 
-  width: 100%; 
-  display: flex; 
-  flex-direction: column; 
+.results-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
   align-items: center;
 }
 
-@keyframes fadeIn { 
-  from { opacity: 0; transform: translateY(10px); } 
-  to { opacity: 1; transform: translateY(0); } 
+.results-data-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Status Pill */
-.status-pill { 
-  display: inline-flex; align-items: center; gap: 10px; 
-  padding: 12px 24px; border-radius: 30px; color: white; font-weight: 600; font-size: 1.1rem; 
-  margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 24px;
+  border-radius: 30px;
+  color: white;
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
-.secure { background: #34c759; }
-.compromised { background: #ff3b30; }
 
-/* --- TRANSMISSION LOG TABLE (WITH NEW COLORS) --- */
-.table-container { overflow-x: auto; margin-bottom: 30px; }
-.table-container h3 { margin-top: 0; color: #1d1d1f; }
-table { width: 100%; border-collapse: collapse; text-align: left; }
-th, td { padding: 12px 8px; border-bottom: 1px solid #e5e5ea; }
-th { color: #86868b; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; }
+.secure {
+  background: #34c759;
+}
 
-/* The 3 Color Codes for the Hackathon */
+.compromised {
+  background: #ff3b30;
+}
+
+/* --- TRANSMISSION LOG TABLE --- */
+.table-container {
+  overflow-x: auto;
+  margin-bottom: 30px;
+  width: 100%;
+}
+
+.table-container h3 {
+  margin-top: 0;
+  color: #1d1d1f;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+th,
+td {
+  padding: 12px 8px;
+  border-bottom: 1px solid #e5e5ea;
+}
+
+th {
+  color: #86868b;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+}
+
+/* Color Codes */
 .row-discarded td {
   background-color: #e3f2fd; /* Light blue */
   color: #1565c0;
   opacity: 0.8;
   font-weight: bold;
 }
-.row-correct { font-weight: 600; color: #34c759; background-color: #f2fbf4; font-weight: bold;} /* Green - Successfully Transmitted */
-.row-corrupted { font-weight: 700; color: #ff3b30; background-color: #fff5f5; font-weight: bold; } /* Red - Eve intercepted and corrupted */
+
+.row-correct {
+  color: #34c759;
+  background-color: #f2fbf4;
+  font-weight: bold;
+}
+
+.row-corrupted {
+  color: #ff3b30;
+  background-color: #fff5f5;
+  font-weight: bold;
+}
 
 /* --- FINAL KEYS --- */
-.final-keys { display: flex; gap: 20px; width: 100%; }
-.key-box { padding: 20px; text-align: center; flex: 1; }
-.key-box h4 { margin: 0 0 10px 0; color: #86868b; font-size: 0.9rem; text-transform: uppercase;}
-.monospace { 
-  font-family: 'SF Mono', 'Courier New', monospace; 
-  font-size: 1.2rem; 
-  font-weight: 600; 
-  letter-spacing: 4px; 
-  color: #0071e3; 
-  word-break: break-all; 
+.final-keys {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+}
+
+.key-box {
+  padding: 20px;
+  text-align: center;
+  flex: 1;
+}
+
+.key-box h4 {
+  margin: 0 0 10px 0;
+  color: #86868b;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+}
+
+.monospace {
+  font-family: 'SF Mono', 'Courier New', monospace;
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 4px;
+  color: #0071e3;
+  word-break: break-all;
   margin: 0;
 }
 
 /* --- LOCKED FOOTER --- */
 .app-footer {
-  margin-top: auto; 
+  margin-top: auto;
   padding: 20px 0 10px 0;
   text-align: center;
   color: #86868b;
@@ -193,11 +377,11 @@ th { color: #86868b; font-weight: 600; font-size: 0.85rem; text-transform: upper
   font-weight: 500;
 }
 
-/* --- IOS SEGMENTED CONTROL (MODE TOGGLE) --- */
+/* --- IOS SEGMENTED CONTROL --- */
 .segmented-control {
   display: flex;
   padding: 6px;
-  background: #e5e5ea; /* Gray background */
+  background: #e5e5ea;
   border-radius: 14px;
   margin-bottom: 30px;
   width: 100%;
@@ -227,25 +411,18 @@ th { color: #86868b; font-weight: 600; font-size: 0.85rem; text-transform: upper
 .segment.active {
   background: #ffffff;
   color: #1d1d1f;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Styling for bits sacrificed during the Parameter Estimation Phase */
-.row-sacrificed td {
+/* Parameter Estimation Phase Styling */
+.row-sacrificed td,
+.row-sacrificed-valid td {
   background-color: #fff8e1; /* Faint yellow/orange */
   color: #b08d00;
   font-style: italic;
   font-weight: bold;
 }
 
-/* Styling for valid bits sacrificed during Parameter Estimation */
-.row-sacrificed-valid td {
-  background-color: #fff8e1; 
-  color: #b08d00;
-  font-style: italic;
-  font-weight: bold;
-}
-/* Styling for CORRUPTED bits caught during Parameter Estimation */
 .row-sacrificed-corrupted td {
   background-color: #f3e5f5; /* Light purple */
   color: #7b1fa2; /* Deep purple */
@@ -267,43 +444,42 @@ th { color: #86868b; font-weight: 600; font-size: 0.85rem; text-transform: upper
   background: white !important;
   border: 2px solid;
   flex: 1;
-  /* Centering Logic */
   display: flex;
   flex-direction: column;
-  align-items: center;    /* Centers the H4 and P horizontally */
-  justify-content: center; /* Centers content vertically if the box has height */
-  text-align: center;      /* Ensures the wrapped bits stay centered */
-  padding: 20px;           /* Gives the bits some breathing room */
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
 }
 
 .key-box-wide p {
   width: 100%;
-  word-break: break-all;   /* Ensures long keys wrap properly while staying centered */
-  margin: 10px 0 0 0;      /* Standard spacing */
+  word-break: break-all;
+  margin: 10px 0 0 0;
 }
 
-/* Text style for matching/non-matching final bits */
+/* Bit Matching styles */
 .bit-match {
-  color: #2e7d32; /* Green */
+  color: #2e7d32;
   font-weight: bold;
 }
 
 .bit-mismatch {
-  color: #d32f2f; /* Red */
+  color: #d32f2f;
   font-weight: bold;
 }
 
 .text-sacrificed {
-  color: #9e9e9e; /* Greyed out */
+  color: #9e9e9e;
 }
 
 .photon-arrow {
   display: inline-block;
-  font-family: "Courier New", Courier, monospace; /* Monospace forces uniform widths */
-  font-size: 20px; /* Force them to be the exact same size */
+  font-family: "Courier New", Courier, monospace;
+  font-size: 20px;
   font-weight: bold;
   line-height: 1;
   text-align: center;
-  width: 24px; /* Creates a perfect square bounding box */
+  width: 24px;
   height: 24px;
 }

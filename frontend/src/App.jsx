@@ -19,6 +19,9 @@ function App() {
   const [animationComplete, setAnimationComplete] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
 
+  const [attackType, setAttackType] = useState('IR'); // 'IR' or 'PNS'
+  const [multiPhotonRate, setMultiPhotonRate] = useState(20); // 20%
+
   const runSimulation = async () => {
     setLoading(true); setResults(null); setNetworkResults(null);
     setAnimationComplete(false); setIsPaused(false);
@@ -27,11 +30,15 @@ function App() {
       if (mode === 'standard') {
         const response = await fetch('http://127.0.0.1:5000/api/simulate/bb84', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ num_bits: numBits, eve_present: evePresent })
+          body: JSON.stringify({ 
+            num_bits: numBits, 
+            eve_present: evePresent,
+            attack_type: attackType,
+            multi_photon_rate: multiPhotonRate / 100 
+          })
         });
         const data = await response.json();
         if (data.success) {
-          // THE FAKE MATH IS GONE! We just pass the real Qiskit data straight to state.
           setResults(data.data);
         }
       } else {
@@ -41,7 +48,6 @@ function App() {
         });
         const data = await response.json();
         if (data.success) {
-          // THE FAKE MATH IS GONE! Trusted nodes gets the pure backend payload.
           setNetworkResults(data.data);
         }
       }
@@ -103,11 +109,35 @@ function App() {
           </div>
           
           {mode === 'standard' ? (
-            <label className="toggle-switch">
-              <input type="checkbox" checked={evePresent} onChange={(e) => setEvePresent(e.target.checked)} />
-              <span className="slider"></span>
-              <span className="toggle-label">Simulate Eavesdropper (Eve)</span>
-            </label>
+            <div className="eve-controls-wrapper">
+              <label className="toggle-switch" style={{ marginBottom: evePresent ? '15px' : '0' }}>
+                <input type="checkbox" checked={evePresent} onChange={(e) => setEvePresent(e.target.checked)} />
+                <span className="slider"></span>
+                <span className="toggle-label">Simulate Eavesdropper (Eve)</span>
+              </label>
+
+              {evePresent && (
+                <div className="settings-row fade-in" style={{ padding: '15px', background: '#fff5f5', borderRadius: '12px', border: '1px solid #ffcdd2' }}>
+                  <div className="input-group attack-select-group">
+                    <label className="text-red">Attack Vector</label>
+                    <select value={attackType} onChange={(e) => setAttackType(e.target.value)}>
+                      <option value="IR">Standard (I-R)</option>
+                      <option value="PNS">PNS Attack</option>
+                    </select>
+                  </div>
+                  
+                  {attackType === 'PNS' && (
+                    <div className="input-group">
+                      <label className="text-purple">Hardware Multi-Photon Error Rate</label>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <input type="range" value={multiPhotonRate} onChange={(e) => setMultiPhotonRate(parseInt(e.target.value))} min="5" max="50" style={{ flexGrow: 1 }} />
+                        <span style={{ fontWeight: 'bold', width: '40px' }}>{multiPhotonRate}%</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           ) : (
             <div className="input-group" style={{ width: '100%', marginTop: '10px' }}>
               <label>Attacker (Eve) Position</label>
@@ -155,14 +185,16 @@ function App() {
                 </div>
                 
                 <div className="glass-panel table-container">
-                  <h3>Transmission Log</h3>
+                  <h3>Transmission Log (Parameter Estimation Phase)</h3>
                   <table>
                     <thead>
                       <tr>
-                        <th>#</th><th>Alice Bit</th><th>Alice Basis</th>
+                        <th>#</th>
+                        {evePresent && (results.attack_type === 'PNS' || attackType === 'PNS') && <th>Pulse</th>}
+                        <th>Alice Bit</th><th>Alice Basis</th>
                         {evePresent && <th className="eve-col-header">Eve Basis</th>}
-                        {evePresent && <th className="eve-col-header">Eve Guessed Bit</th>}
-                        <th>Bob Basis</th><th>Bob Result</th><th>Match Status</th>
+                        {evePresent && <th className="eve-col-header">Eve Result</th>}
+                        <th>Bob Basis</th><th>Bob Result</th><th>Protocol Status</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -170,6 +202,9 @@ function App() {
                         const basisMatch = results.alice_bases[index] === results.bob_bases[index];
                         const bitMatch = results.alice_bits[index] === results.bob_results[index];
                         const isSacrificed = results.sacrificed_indices?.includes(index);
+                        const isKept = basisMatch && !isSacrificed; 
+                        const isPNS = evePresent && (results.attack_type === 'PNS' || attackType === 'PNS');
+                        const isMultiPhoton = results.pulse_types?.[index] === 2;
                         
                         let rowClass = ''; 
                         let matchStatus = '';
@@ -178,7 +213,6 @@ function App() {
                           rowClass = 'row-discarded'; 
                           matchStatus = 'Discarded (Basis)'; 
                         } else if (isSacrificed) { 
-                          // NEW: Split the sacrificed rows into valid (yellow) and corrupted (orange)
                           if (bitMatch) {
                             rowClass = 'row-sacrificed-valid'; 
                             matchStatus = 'Sacrificed (Valid)'; 
@@ -186,12 +220,17 @@ function App() {
                             rowClass = 'row-sacrificed-corrupted'; 
                             matchStatus = 'Sacrificed (Corrupted!)'; 
                           }
-                        } else if (bitMatch) { 
-                          rowClass = 'row-correct'; 
-                          matchStatus = 'Kept (Secret Key)'; 
-                        } else { 
-                          rowClass = 'row-corrupted'; 
-                          matchStatus = 'Corrupted!'; 
+                        } else if (isKept) { 
+                          if (isPNS && isMultiPhoton) {
+                            rowClass = 'row-corrupted'; 
+                            matchStatus = 'Duplicated (Eve has copy!)';
+                          } else if (bitMatch) {
+                            rowClass = 'row-correct'; 
+                            matchStatus = 'Kept (Secret Key)'; 
+                          } else {
+                            rowClass = 'row-corrupted'; 
+                            matchStatus = 'Kept (Corrupted!)'; 
+                          }
                         }
 
                         const eveBasisStr = (evePresent && results.eve_bases) ? (results.eve_bases[index] === 0 ? '+' : 'x') : '-';
@@ -199,10 +238,18 @@ function App() {
 
                         return (
                           <tr key={index} className={rowClass}>
-                            <td>{index + 1}</td><td>{bit}</td><td>{results.alice_bases[index] === 0 ? '+' : 'x'}</td>
+                            <td>{index + 1}</td>
+                            
+                            {isPNS && (
+                              <td className={isMultiPhoton ? 'text-purple' : 'text-gray'}>
+                                {isMultiPhoton ? <strong>Multi</strong> : 'Single'}
+                              </td>
+                            )}
+
+                            <td>{bit}</td><td>{results.alice_bases[index] === 0 ? '+' : 'x'}</td>
                             {evePresent && <td className="eve-col-data">{eveBasisStr}</td>}
                             {evePresent && <td className="eve-col-data">{eveBitStr}</td>}
-                            <td>{results.bob_bases[index] === 0 ? '+' : 'x'}</td><td>{results.bob_results[index]}</td><td>{matchStatus}</td>
+                            <td>{results.bob_bases[index] === 0 ? '+' : 'x'}</td><td>{results.bob_results[index]}</td><td><strong>{matchStatus}</strong></td>
                           </tr>
                         );
                       })}
@@ -211,7 +258,6 @@ function App() {
                 </div>
 
                 <div className="final-keys">
-                {/* --- THE KEYS --- */}
                 {(() => {
                   const sortedSacrificed = results.sacrificed_indices ? [...results.sacrificed_indices].sort((a,b) => a - b) : [];
                   const aliceSacrificed = sortedSacrificed.map(idx => results.alice_bits[idx]).join('');
@@ -219,7 +265,6 @@ function App() {
                   
                   return (
                     <div className="keys-container-full">
-                      {/* 1. Sacrificed Keys (Greyed Out, White Background) */}
                       <div className="final-keys">
                         <div className="glass-panel key-box-wide" style={{ borderColor: '#e0e0e0' }}>
                           <h4 style={{ color: '#757575' }}>Alice's Sacrificed Key (Public Test)</h4>
@@ -231,23 +276,22 @@ function App() {
                         </div>
                       </div>
 
-                      {/* 2. Final Secret Keys (Dynamic Color, White Background) */}
                       <div className="final-keys">
                         <div className="glass-panel key-box-wide" style={{ borderColor: '#cfd8dc' }}>
-                          <h4 style={{ color: '#455a64' }}>Alice's Final Secret Key (Secure)</h4>
+                          <h4 style={{ color: '#455a64' }}>Alice's Final "Secret Key</h4>
                           <p className="monospace">
-                            {results.alice_key.map((bit, i) => (
-                              <span key={i} className={bit === results.bob_key[i] ? 'bit-match' : 'bit-mismatch'}>
+                            {results.alice_key?.map((bit, i) => (
+                              <span key={i} className={bit === results.bob_key?.[i] ? 'bit-match' : 'bit-mismatch'}>
                                 {bit}
                               </span>
                             ))}
                           </p>
                         </div>
                         <div className="glass-panel key-box-wide" style={{ borderColor: '#cfd8dc' }}>
-                          <h4 style={{ color: '#455a64' }}>Bob's Final Secret Key (Secure)</h4>
+                          <h4 style={{ color: '#455a64' }}>Bob's Final "Secret" Key</h4>
                           <p className="monospace">
-                            {results.bob_key.map((bit, i) => (
-                              <span key={i} className={bit === results.alice_key[i] ? 'bit-match' : 'bit-mismatch'}>
+                            {results.bob_key?.map((bit, i) => (
+                              <span key={i} className={bit === results.alice_key?.[i] ? 'bit-match' : 'bit-mismatch'}>
                                 {bit}
                               </span>
                             ))}
