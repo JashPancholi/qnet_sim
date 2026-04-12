@@ -85,9 +85,12 @@
 
 /* Photons */
 .photon {
-  position: absolute; left: 0; top: 130px; margin-top: -24px; 
-  font-size: 2.5rem; line-height: 1; font-weight: 400; color: #0071e3; 
-  text-shadow: 0 4px 10px rgba(0, 113, 227, 0.3); z-index: 3;
+  position: absolute; left: 0; 
+  top: 130px; margin-top: -24px; /* Note: You might need to tweak margin-top slightly like -18px depending on your layout */
+  color: #0071e3; 
+  /* CHANGED: Replaced text-shadow with filter for SVGs */
+  filter: drop-shadow(0 4px 6px rgba(0, 113, 227, 0.4)); 
+  z-index: 3;
 }
 
 .photon.direct { animation: travelToBob linear forwards; }

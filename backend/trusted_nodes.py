@@ -7,20 +7,20 @@ def generate_trusted_node_network(num_nodes=1, num_bits=50, compromised_link_ind
     num_links = num_nodes + 1 
     links_data = []
     
-    # 1. Generate the physical links using your imported BB84 logic
+    #Generate the physical links using imported BB84 logic
     for i in range(num_links):
         eve_present = (i == compromised_link_index)
         link_results = generate_bb84_transmission(num_bits=num_bits, eve_present=eve_present)
         
         links_data.append({
             "link_index": i, 
-            "sender_key": link_results["alice_key"],    # The clean key Alice/Node generated
-            "receiver_key": link_results["bob_key"],    # The key the receiving node ACTUALLY got (contains Eve's errors!)
+            "sender_key": link_results["alice_key"],    #The clean key Alice/Node generated
+            "receiver_key": link_results["bob_key"],    #The key the receiving node ACTUALLY got (contains Eve's errors)
             "qber": link_results["qber"],
             "full_data": link_results
         })
         
-    # 2. Truncate keys to the same length for XOR math
+    #Truncate keys to the same length for XOR math
     min_length = min([len(link["sender_key"]) for link in links_data]) if links_data else 0
     
     for link in links_data:
@@ -33,11 +33,11 @@ def generate_trusted_node_network(num_nodes=1, num_bits=50, compromised_link_ind
     # 3. The REALITY-ACCURATE XOR Relay
     alice_master_key = links_data[0]["trunc_sender"]
     
-    # Node 1 doesn't magically know Alice's key. It only knows what it received!
+    #Node 1 doesn't magically know Alice's key. It only knows what it received
     current_payload = links_data[0]["trunc_receiver"] 
     public_transmissions = []
     
-    # 3. The REALITY-ACCURATE XOR Relay
+    #The REALITY-ACCURATE XOR Relay
     alice_master_key = links_data[0]["trunc_sender"]
     current_payload = links_data[0]["trunc_receiver"] 
     public_transmissions = []

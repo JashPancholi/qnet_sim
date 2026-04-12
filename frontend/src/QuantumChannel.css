@@ -129,15 +129,11 @@
 
 /* --- LIGHT THEME PHOTONS AND TOGGLE TRICK --- */
 .photon {
-  position: absolute; 
-  left: 0; 
-  top: 130px; /* Matches cable */
-  margin-top: -24px; 
-  font-size: 2.5rem; 
-  line-height: 1;
-  font-weight: 400; 
+  position: absolute; left: 0; 
+  top: 130px; margin-top: -24px; /* Note: You might need to tweak margin-top slightly like -18px depending on your layout */
   color: #0071e3; 
-  text-shadow: 0 4px 10px rgba(0, 113, 227, 0.3); 
+  /* CHANGED: Replaced text-shadow with filter for SVGs */
+  filter: drop-shadow(0 4px 6px rgba(0, 113, 227, 0.4)); 
   z-index: 3;
 }
 
@@ -255,3 +251,42 @@
   width: 30px; 
   text-align: center; 
 }
+
+/* --- PNS ATTACK SPLIT PHOTON --- */
+.photon.pns-stolen {
+  animation: travelAndStopAtEve linear forwards;
+  color: #af52de; /* Starts purple to show it's a clone */
+}
+
+@keyframes travelAndStopAtEve {
+  /* Starts slightly below the main photon so you can see both */
+  0% { left: 0%; opacity: 0; transform: translateY(15px) scale(0.7); } 
+  10% { opacity: 1; transform: translateY(15px) scale(0.8); }
+  
+  /* Travels parallel to the main photon */
+  40% { left: 40%; opacity: 1; transform: translateY(15px) scale(0.8); }
+  
+  /* At 50%, it violently swerves UP into Eve's node (-70px) and turns red! */
+  50% { left: 50%; opacity: 1; transform: translateY(-70px) scale(0.5); color: #ff3b30; } 
+  
+  /* Stays trapped in Eve's node */
+  90% { left: 50%; opacity: 1; transform: translateY(-70px) scale(0.5); color: #ff3b30; }
+  
+  /* Fades out at the end of the cycle */
+  100% { left: 50%; opacity: 0; transform: translateY(-70px) scale(0.3); }
+}
+
+/* Make sure SVGs use drop-shadow instead of text-shadow for the glowing effect */
+.photon {
+  position: absolute; 
+  left: 0; 
+  top: 130px; 
+  margin-top: -24px; 
+  color: #0071e3; 
+  filter: drop-shadow(0 4px 6px rgba(0, 113, 227, 0.4)); 
+  z-index: 3;
+}
+
+.text-purple { color: #af52de; }
+.text-red { color: #d32f2f; }
+.text-gray { color: #8e8e93; }

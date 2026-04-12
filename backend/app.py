@@ -12,8 +12,17 @@ def simulate_bb84():
     num_bits = data.get('num_bits', 20)
     eve_present = data.get('eve_present', False)
     
+    # Advanced Attack Parameters
+    attack_type = data.get('attack_type', 'IR')
+    multi_photon_rate = data.get('multi_photon_rate', 0.2)
+    
     try:
-        results = generate_bb84_transmission(num_bits=num_bits, eve_present=eve_present)
+        results = generate_bb84_transmission(
+            num_bits=num_bits, 
+            eve_present=eve_present,
+            attack_type=attack_type,
+            multi_photon_rate=multi_photon_rate
+        )
         return jsonify({"success": True, "data": results})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
