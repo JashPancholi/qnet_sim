@@ -252,9 +252,11 @@ const TrustedNetwork = ({ results, compromisedLink, speed = 1, isPaused = false 
                              <p>Basis: <strong>{linkRight.full_data.eve_bases[currentPhotonIndex] === 0 ? '+' : 'x'}</strong></p>
                            </div>
                         ) : isPastLinkRight ? (
-                           <div className="node-stats eve-stats">
-                             <p className="text-red"><strong>Compromised!</strong></p>
-                           </div>
+                          <p className={linkRight.qber > 0.11 ? "text-red" : "text-green"}>
+                            <strong>
+                              {linkRight.qber > 0.11 ? "✗ Key Compromised" : "✓ Key Established"}
+                            </strong>
+                          </p>
                         ) : (
                            <div className="node-stats eve-stats">
                              <p className="text-gray">Waiting...</p>

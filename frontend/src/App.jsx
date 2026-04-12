@@ -173,6 +173,20 @@ function App() {
           </div>
         </section>
 
+        {/* --- MOVED & UPDATED: Landing Page Circuit Images --- */}
+        {!results && !networkResults && (
+          <div className="landing-images fade-in">
+            <div className="circuit-container">
+              <img src="/circuit-1.png" alt="Circuit without Eve" className="circuit-image" />
+              <p className="circuit-label">Standard BB84 Circuit (No Eavesdropper)</p>
+            </div>
+            <div className="circuit-container">
+              <img src="/circuit-2.png" alt="Circuit with Eve" className="circuit-image" />
+              <p className="circuit-label">Compromised Circuit (Eve Intercepts)</p>
+            </div>
+          </div>
+        )}
+
         {mode === 'standard' && results && (
           <section className="results-wrapper">
             <QuantumChannel results={results} evePresent={evePresent} speed={speed} isPaused={isPaused} onAnimationComplete={() => setAnimationComplete(true)} />
@@ -199,7 +213,6 @@ function App() {
                     </thead>
                     <tbody>
                       {results.alice_bits.map((bit, index) => {
-                        // FIX: Detect if Bob lost the photon
                         const isLost = results.bob_results[index] === -1;
                         const basisMatch = results.alice_bases[index] === results.bob_bases[index];
                         const bitMatch = results.alice_bits[index] === results.bob_results[index];
@@ -207,7 +220,6 @@ function App() {
                         const isPNS = evePresent && (results.attack_type === 'PNS' || attackType === 'PNS');
                         const isMultiPhoton = results.pulse_types?.[index] === 2;
                         
-                        // We only consider it "kept" if bases match, it wasn't sacrificed, AND it wasn't lost.
                         const isKept = basisMatch && !isSacrificed && !isLost; 
                         
                         let rowClass = ''; 
@@ -240,7 +252,6 @@ function App() {
                           }
                         }
 
-                        // Protect against -1 values rendering weirdly
                         const eveBasisStr = (evePresent && results.eve_bases && results.eve_bases[index] !== -1) ? (results.eve_bases[index] === 0 ? '+' : 'x') : '-';
                         const eveBitStr = (evePresent && results.eve_results && results.eve_results[index] !== -1) ? results.eve_results[index] : '-';
 
@@ -323,7 +334,7 @@ function App() {
       </div>
 
       <footer className="app-footer">
-        <p>Made with a lot of Diet Coke and love by Neelay ✕ Jash</p>
+        {/* Footer text removed for production */}
       </footer>
     </div>
   );
