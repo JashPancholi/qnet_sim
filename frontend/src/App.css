@@ -483,3 +483,11 @@ th {
   width: 24px;
   height: 24px;
 }
+
+/* Styling for photons blocked/lost in transit */
+.row-lost td { 
+  background-color: #fff3e0; /* Light orange */
+  color: #e65100; /* Dark orange */
+  font-weight: bold; 
+  font-style: italic;
+}

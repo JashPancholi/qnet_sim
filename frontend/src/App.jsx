@@ -199,17 +199,24 @@ function App() {
                     </thead>
                     <tbody>
                       {results.alice_bits.map((bit, index) => {
+                        // FIX: Detect if Bob lost the photon
+                        const isLost = results.bob_results[index] === -1;
                         const basisMatch = results.alice_bases[index] === results.bob_bases[index];
                         const bitMatch = results.alice_bits[index] === results.bob_results[index];
                         const isSacrificed = results.sacrificed_indices?.includes(index);
-                        const isKept = basisMatch && !isSacrificed; 
                         const isPNS = evePresent && (results.attack_type === 'PNS' || attackType === 'PNS');
                         const isMultiPhoton = results.pulse_types?.[index] === 2;
+                        
+                        // We only consider it "kept" if bases match, it wasn't sacrificed, AND it wasn't lost.
+                        const isKept = basisMatch && !isSacrificed && !isLost; 
                         
                         let rowClass = ''; 
                         let matchStatus = '';
                         
-                        if (!basisMatch) { 
+                        if (isLost) {
+                          rowClass = 'row-lost';
+                          matchStatus = 'Lost (Blocked by Eve)';
+                        } else if (!basisMatch) { 
                           rowClass = 'row-discarded'; 
                           matchStatus = 'Discarded (Basis)'; 
                         } else if (isSacrificed) { 
@@ -233,8 +240,9 @@ function App() {
                           }
                         }
 
-                        const eveBasisStr = (evePresent && results.eve_bases) ? (results.eve_bases[index] === 0 ? '+' : 'x') : '-';
-                        const eveBitStr = (evePresent && results.eve_results) ? results.eve_results[index] : '-';
+                        // Protect against -1 values rendering weirdly
+                        const eveBasisStr = (evePresent && results.eve_bases && results.eve_bases[index] !== -1) ? (results.eve_bases[index] === 0 ? '+' : 'x') : '-';
+                        const eveBitStr = (evePresent && results.eve_results && results.eve_results[index] !== -1) ? results.eve_results[index] : '-';
 
                         return (
                           <tr key={index} className={rowClass}>
@@ -249,7 +257,9 @@ function App() {
                             <td>{bit}</td><td>{results.alice_bases[index] === 0 ? '+' : 'x'}</td>
                             {evePresent && <td className="eve-col-data">{eveBasisStr}</td>}
                             {evePresent && <td className="eve-col-data">{eveBitStr}</td>}
-                            <td>{results.bob_bases[index] === 0 ? '+' : 'x'}</td><td>{results.bob_results[index]}</td><td><strong>{matchStatus}</strong></td>
+                            <td>{results.bob_bases[index] === 0 ? '+' : 'x'}</td>
+                            <td>{isLost ? <span style={{opacity: 0.5}}>None</span> : results.bob_results[index]}</td>
+                            <td><strong>{matchStatus}</strong></td>
                           </tr>
                         );
                       })}
