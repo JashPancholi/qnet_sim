@@ -85,7 +85,4 @@ Unlike basic theoretical simulators, Q-Net Sim bridges the gap to practical appl
 2.  **Trusted Nodes Relay:** Configure the network to use 1 or 2 intermediate nodes. Choose a compromised link to see how an attacker intercepts the quantum channel.
 
 ## Demo Video
-<video width="600" controls>
-  <source src="https://github.com/JashPancholi/qnet_sim/raw/refs/heads/jash/frontend/public/test.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+You can viewe a demonstrations execution of the simulator. navigate to **./frontend/public/test.mp4** to access the video.
